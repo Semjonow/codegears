@@ -21,9 +21,15 @@ set :scm,        "git"
 set :repository, "git@github.com:Semjonow/#{application}.git"
 set :branch,     "master"
 
-set :maintenance_template_path, File.expand_path("../recipes/templates/maintenance.erb", __FILE__)
-
 default_run_options[:pty]   = true
 ssh_options[:forward_agent] = true
 
 after "deploy", "deploy:cleanup"
+
+def press_enter( ch, stream, data)
+  if data =~ /Press.\[ENTER\].to.continue/
+    ch.send_data("\n")
+  else
+    Capistrano::Configuration.default_io_proc.call(ch, stream, data)
+  end
+end
