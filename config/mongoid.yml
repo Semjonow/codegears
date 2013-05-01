@@ -78,3 +78,15 @@ test:
         # low amounts for fast failures.
         max_retries: 1
         retry_interval: 0
+
+production:
+test:
+  sessions:
+    default:
+      database: codegears_production
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
+        max_retries: 1
+        retry_interval: 0
