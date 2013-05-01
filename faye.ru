@@ -4,7 +4,7 @@ require "mongoid"
 require(File.expand_path("../app/models/application.rb", __FILE__))
 
 Faye::WebSocket.load_adapter("thin")
-Mongoid.load!(File.expand_path("../config/mongoid.yml", __FILE__), :development)
+Mongoid.load!(File.expand_path("../config/mongoid.yml", __FILE__), :production)
 
 class ServerAuth
   def incoming(message, callback)
