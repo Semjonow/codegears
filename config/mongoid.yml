@@ -80,7 +80,6 @@ test:
         retry_interval: 0
 
 production:
-test:
   sessions:
     default:
       database: codegears_production
