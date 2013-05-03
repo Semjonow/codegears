@@ -5,8 +5,8 @@ gem "rails-api"
 
 gem "thin"
 gem "mongoid"
-gem "faye", :require => "faye"
-gem "faye-redis", :require => "faye/redis"
+gem "faye",
+gem "faye-redis",
 gem "oj"
 gem "active_model_serializers"
 
