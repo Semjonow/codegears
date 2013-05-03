@@ -4,7 +4,6 @@ load "config/recipes/base"
 load "config/recipes/nginx"
 load "config/recipes/unicorn"
 load "config/recipes/mongodb"
-load "config/recipes/faye"
 load "config/recipes/redis"
 load "config/recipes/nodejs"
 load "config/recipes/rbenv"
@@ -17,6 +16,23 @@ set :application, "codegears"
 set :deploy_to,   "/home/#{user}/apps/#{application}"
 set :deploy_via,  :remote_cache
 set :use_sudo,    false
+
+set :faye_pid,    "#{current_path}/tmp/pids/faye.pid"
+set :faye_config, "faye.ru"
+
+namespace :faye do
+  desc "Start Faye"
+  task :start do
+    run "cd #{current_path} && bundle exec rackup #{faye_config} -s thin -E production -D --pid #{faye_pid}"
+  end
+
+  desc "Stop Faye"
+  task :stop do
+    run "kill `cat #{faye_pid}` || true"
+  end
+  before 'deploy:update_code', 'faye:stop'
+  after 'deploy:finalize_update', 'faye:start'
+end
 
 set :scm,        "git"
 set :repository, "git@github.com:Semjonow/#{application}.git"
