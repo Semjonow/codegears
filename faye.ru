@@ -1,5 +1,5 @@
 # coding: utf-8
-$:.unshift File.expand_path(File.dirname(__FILE__), __FILE__)
+require "rubygems"
 
 require "faye"
 require "faye/redis"
