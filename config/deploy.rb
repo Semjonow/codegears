@@ -31,7 +31,7 @@ namespace :faye do
     run "kill `cat #{faye_pid}` || true"
   end
   before 'deploy:update_code', 'faye:stop'
-  after 'deploy:finalize_update', 'faye:start'
+  after 'deploy:cleanup', 'faye:start'
 end
 
 set :scm,        "git"
