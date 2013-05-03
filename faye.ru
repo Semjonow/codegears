@@ -1,3 +1,5 @@
+$:.push(File.dirname(__FILE__))
+
 require "faye"
 require "faye/redis"
 require "mongoid"
