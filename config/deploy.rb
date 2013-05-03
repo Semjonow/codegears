@@ -17,23 +17,6 @@ set :deploy_to,   "/home/#{user}/apps/#{application}"
 set :deploy_via,  :remote_cache
 set :use_sudo,    false
 
-set :faye_pid,    "#{current_path}/tmp/pids/faye.pid"
-set :faye_config, "faye.ru"
-
-namespace :faye do
-  desc "Start Faye"
-  task :start do
-    run "cd #{current_path} && RAILS_ENV=production bundle exec rackup #{faye_config} -s thin -E production -D --pid #{faye_pid}"
-  end
-
-  desc "Stop Faye"
-  task :stop do
-    run "kill `cat #{faye_pid}` || true"
-  end
-  before 'deploy:update_code', 'faye:stop'
-  after 'deploy:cleanup', 'faye:start'
-end
-
 set :scm,        "git"
 set :repository, "git@github.com:Semjonow/#{application}.git"
 set :branch,     "master"
@@ -41,6 +24,7 @@ set :branch,     "master"
 default_run_options[:pty]   = true
 ssh_options[:forward_agent] = true
 
+load "config/recipes/faye"
 after "deploy", "deploy:cleanup"
 
 def press_enter( ch, stream, data)
