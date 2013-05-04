@@ -10,11 +10,14 @@ class AppsController < ApplicationController
   end
 
   def show
-    @application = Application.by_id(params[:id]).first
-    if @application
-      render :json => { :active => @application.active }
+    if params[:secret_id].present? && params[:secret_token].present?
+      @application = Application.find_by_auth(params[:secret_id], params[:secret_token])
+      render :json => { :remaining_requests => @application.remaining.requests,:active => @application.active } and return if @application
     else
-      render :json => { :success => false }
+      @application = Application.by_id(params[:id]).first
+      render :json => { :active => @application.active } and return if @application
     end
+
+    render :json => { :success => false }
   end
 end

@@ -42,6 +42,10 @@ class Application
     save!
   end
 
+  def remaining_requests
+    max_num_of_requests - num_of_requests
+  end
+
   private
 
   def generate_secret_id

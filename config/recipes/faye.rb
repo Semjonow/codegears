@@ -1,18 +1,21 @@
-require "bundler/capistrano"
-
-set :faye_pid,    "#{current_path}/tmp/pids/faye.pid"
-set :faye_config, "faye.ru"
+set_default(:faye_user) { user }
+set_default(:faye_pid) { "#{current_path}/tmp/pids/faye.pid" }
 
 namespace :faye do
-  desc "Start Faye"
-  task :start do
-    run "cd #{current_path} && RAILS_ENV=production bundle exec rackup #{faye_config} -s thin -E production -D --pid #{faye_pid}"
+  desc "Setup Faye initializer"
+  task :setup, roles: :app do
+    template "faye_init", "/tmp/faye_init"
+    run "chmod +x /tmp/faye_init"
+    run "#{sudo} mv /tmp/faye_init /etc/init.d/faye_#{application}"
+    run "#{sudo} update-rc.d -f faye_#{application} defaults"
   end
+  after "deploy:setup", "faye:setup"
 
-  desc "Stop Faye"
-  task :stop do
-    run "kill `cat #{faye_pid}` || true"
+  %w[start stop restart].each do |command|
+    desc "#{command} faye"
+    task command, roles: :app do
+      run "service faye_#{application} #{command}"
+    end
+    after "deploy:#{command}", "faye:#{command}"
   end
-  before "deploy:update_code", "faye:stop"
-  after  "deploy:cleanup",     "faye:start"
 end
