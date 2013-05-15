@@ -9,7 +9,7 @@ load "config/recipes/nodejs"
 load "config/recipes/rbenv"
 load "config/recipes/check"
 
-server "173.255.229.72", :web, :app, :db, primary: true
+server "178.79.191.51", :web, :app, :db, primary: true
 
 set :user,        "codegears"
 set :application, "codegears"
